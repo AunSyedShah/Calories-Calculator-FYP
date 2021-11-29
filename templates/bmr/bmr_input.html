@@ -1,0 +1,35 @@
+{% extends "bmr/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+    BMR |
+{% endblock %}
+{% block content %}
+    <h1>BMR</h1>
+    <h3>Welcome {{ user.first_name }} {{ user.last_name }}</h3>
+    <div class="alert alert-warning" role="alert">
+        <h3>General Instructions</h3>
+        <ul>
+            <li>Weight should be in Kgs</li>
+            <li>Height should be in cms</li>
+        </ul>
+    </div>
+    <div class="w-25">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form| crispy }}
+            <button type="submit" class="btn btn-primary my-1">Calculate BMR</button>
+        </form>
+    </div>
+    <div>
+        <h3>Your Last Updated BMR</h3>
+        {% if bmr_details %}
+            {% for bmr_detail in bmr_details %}
+                <p>{{ bmr_detail.bmr }}</p>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning w-25" role="alert">
+                No Record Found
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
