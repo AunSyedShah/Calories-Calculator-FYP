@@ -1,10 +1,11 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import redirect
 from django.shortcuts import render
+
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
 from .models import BMRDetail
-
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect
 
 
 def calculate_bmr_gender_based(gender, weight, height, age):
@@ -81,10 +82,14 @@ def sign_in(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
+            if user is not None:  # if user is authenticated
+                login(request, user)  # login and create session
+                messages.success(request, "Login Successful")
                 return redirect("home")
-    else:
+        else:
+            messages.error(request, "Wrong Credentials")
+            return redirect("sign_in")
+    elif request.method == "GET":
         form = AuthenticationForm()
         context["form"] = form
     return render(request, "bmr/login.html", context)
@@ -92,6 +97,7 @@ def sign_in(request):
 
 def user_logout(request):
     logout(request)
+    messages.success(request, "Successfully Logged Out")
     return redirect("sign_in")
 
 

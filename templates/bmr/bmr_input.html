@@ -3,10 +3,22 @@
 {% block title %}
     BMR |
 {% endblock %}
+{% block js_scripts %}
+    <script>
+    </script>
+{% endblock %}
 {% block content %}
-    <h1>BMR</h1>
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Holy guacamole!</strong> Successfully Logged In
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
     <h3>Welcome {{ user.first_name }} {{ user.last_name }}</h3>
-    <div class="alert alert-warning" role="alert">
+    <div class="alert alert-warning" role="alert" id="login-success-message">
         <h3>General Instructions</h3>
         <ul>
             <li>Weight should be in Kgs</li>
