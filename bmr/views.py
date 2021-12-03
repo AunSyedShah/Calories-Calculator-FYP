@@ -1,8 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
 from .models import BMRDetail
@@ -111,3 +110,9 @@ def add_food_item(request):
             pass
     else:
         return redirect("sign_in")
+
+
+def delete_bmr(request, delete_id):
+    record_to_record = get_object_or_404(BMRDetail, id=delete_id)
+    record_to_record.delete()
+    return redirect("home")
