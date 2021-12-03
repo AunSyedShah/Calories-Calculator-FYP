@@ -65,6 +65,7 @@ def signup(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Account created successfully")
             return redirect("sign_in")
     else:
         form = UserRegistrationForm()
@@ -82,7 +83,7 @@ def sign_in(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             user = authenticate(username=username, password=password)
-            if user is not None:  # if user is authenticated
+            if user:  # if user is authenticated
                 login(request, user)  # login and create session
                 messages.success(request, "Login Successful")
                 return redirect("home")
