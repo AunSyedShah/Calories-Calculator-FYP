@@ -4,11 +4,20 @@
     Register |
 {% endblock %}
 {% block content %}
-    <h1>Registration</h1>
+    <h3>Registration</h3>
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
     <form method="POST" class="form-group" action="">
-        {% csrf_token %}
+            {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-success">Register</button>
-        <a class="btn btn-success mx-1" href="{% url 'sign_in' %}" role="button">Login</a>
     </form>
+    <strong>Already have an account?</strong>
+    <a href="{% url 'sign_in' %}" class="link-primary">Login Here</a>
 {% endblock %}

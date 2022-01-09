@@ -1,0 +1,48 @@
+{% extends "bmr/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Calories Detail |
+{% endblock %}
+{% block content %}
+    <h3>Calories Detail</h3>
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+    <div class="form-group">
+        <label for="exampleInputEmail1">Search / Filter</label>
+        <input type="text" class="form-control" id="exampleInputEmail1"
+               placeholder="Search / Filter">
+    </div>
+    {% if items %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Item Name</th>
+                <th scope="col">Calories</th>
+                <th scope="col">Meal Type</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody id="myTable">
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.calories }}</td>
+                    <td>{{ item.meal_type }}</td>
+                    <td>{{ item.date_added }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No past calories record found, Kindly add calories by <a href="/addfooditem/" class="alert-link">Clicking
+            here</a>.
+        </div>
+    {% endif %}
+{% endblock %}

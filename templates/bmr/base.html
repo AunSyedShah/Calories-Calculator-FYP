@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -16,6 +17,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#exampleInputEmail1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 
     <title>{% block title %}{% endblock title %}Calories Calculator</title>
     {% block js_scripts %}
@@ -33,10 +44,19 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav ml-auto">
                     {% if request.user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="btn btn-warning" href="{% url 'logout' %}" role="button">Logout</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Welcome, {{ request.user.first_name }}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Edit BMR Details</a>
+                                <a class="dropdown-item" href="/addfooditem/">Add Food Items</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            </div>
                         </li>
                     {% endif %}
                 </ul>
@@ -48,5 +68,16 @@
     {% endblock content %}
 </div>
 
+<div class="container">
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2 text-muted">Home</a></li>
+        </ul>
+        <p class="text-center text-muted">&copy; 2022 Syed Aun Muhammad, Calories Calculator</p>
+        <p class="text-center text-muted">Final Year Project for <strong><a href="https://vu.edu.pk/"
+                                                                            class="link-success" target="_blank">Virtual
+            University of Pakistan</a></strong></p>
+    </footer>
+</div>
 </body>
 </html>
