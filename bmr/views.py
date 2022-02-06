@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -122,16 +124,21 @@ def sign_in(request):
             user = authenticate(username=username, password=password)
             if user:  # if user is authenticated
                 login(request, user)  # login and create session
+
+                # user has to enter details for calculating BMR
                 bmr_details_entered = BMRDetail.objects.filter(user=request.user.id)
-                if bmr_details_entered:
+                if bmr_details_entered:  # if BMR details are already entered, redirect user to dashboard
                     messages.success(request, "Login Successful ")
                     return redirect("dashboard")
-                messages.success(request, "Login Successful")
-                return redirect("home")
+                else:  # in case BMR details are not entered, redirect user to home (BMR details page)
+                    messages.success(request, "Login Successful")
+                    return redirect("home")
         else:
             messages.error(request, "Wrong Credentials")
             return redirect("sign_in")
-    elif request.method == "GET":
+    elif request.method == "GET":  # login page as GET request
+        if request.user.is_authenticated:
+            return redirect("home")
         form = AuthenticationForm()
         context["form"] = form
     return render(request, "bmr/login.html", context)
@@ -173,8 +180,14 @@ def calories_detail(request):
     if request.user.is_authenticated:  # if user is authenticated
         if request.method == "GET":  # get request
             items = FoodItem.objects.filter(user=request.user.id)
+            today_calories = items.filter(date_added=timezone.now())
+            some_day_last_week = timezone.now().date() - timedelta(days=7)
+            monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
+            monday_of_this_week = monday_of_last_week + timedelta(days=7)
+            calories_week = items.filter(date_added__gte=monday_of_last_week, date_added__lt=monday_of_this_week)
             context = {
-                "items": items
+                "items": today_calories,
+                "calories_week": calories_week
             }
             return render(request, "bmr/calories_detail.html", context)
         if request.method == "POST":  # post request

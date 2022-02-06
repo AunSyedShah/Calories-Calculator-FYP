@@ -13,11 +13,6 @@
             </button>
         </div>
     {% endfor %}
-    <div class="form-group">
-        <label for="exampleInputEmail1">Search / Filter</label>
-        <input type="text" class="form-control" id="exampleInputEmail1"
-               placeholder="Search / Filter">
-    </div>
     {% if items %}
         <table class="table table-striped">
             <thead>
@@ -28,8 +23,37 @@
                 <th scope="col">Date</th>
             </tr>
             </thead>
-            <tbody id="myTable">
+            <tbody>
             {% for item in items %}
+                <tr>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.calories }}</td>
+                    <td>{{ item.meal_type }}</td>
+                    <td>{{ item.date_added }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No past calories record found, Kindly add calories by <a href="/addfooditem/" class="alert-link">Clicking
+            here</a>.
+        </div>
+    {% endif %}
+
+    <h3>Past Week Calories Record</h3>
+    {% if items %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Item Name</th>
+                <th scope="col">Calories</th>
+                <th scope="col">Meal Type</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in calories_week %}
                 <tr>
                     <td>{{ item.item_name }}</td>
                     <td>{{ item.calories }}</td>

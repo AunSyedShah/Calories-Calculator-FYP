@@ -81,7 +81,8 @@
                     {% elif total_calories > calories_status %}
                         <td>You are consuming {{ calories_status | abs }} more Calories than your daily requirement</td>
                     {% else %}
-                        <td>You are consuming {{ calories_status }} less Calories than your daily requirement</td>
+                        <td>More <strong>{{ calories_status }}</strong> Calories are needed to accomplish daily target
+                        </td>
                     {% endif %}
                 </tr>
             </table>

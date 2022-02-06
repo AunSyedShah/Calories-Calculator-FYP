@@ -19,7 +19,8 @@ class BMRDetail(models.Model):
         (2, "lightly active"),
         (3, "moderately active"),
         (4, "very active"),
-        (5, "extra active"),    )
+        (5, "extra active"),
+    )
     life_style = models.IntegerField(choices=LIFE_STYLE_CHOICES, default=0)
     bmr = models.IntegerField(default=0)
 
@@ -35,7 +36,7 @@ class FoodItem(models.Model):
         ("extras", "extras")
     )
     meal_type = models.CharField(choices=MEAL_TYPE_CHOICE, max_length=9, default="extras")
-    date_added = models.DateField(default=timezone.now)
+    date_added = models.DateField(default=timezone.now())
 
     def __str__(self):
         return self.item_name
