@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bmr',
-    'api',
     'crispy_forms',
     'mathfilters',
 ]
@@ -83,13 +82,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-"""DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'practice',
-    }
-}"""
 
 # DATABASES = {
 #     'default': {
