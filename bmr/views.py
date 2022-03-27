@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.utils import timezone
 
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
@@ -191,6 +191,6 @@ def calories_detail(request):
             }
             return render(request, "bmr/calories_detail.html", context)
         if request.method == "POST":  # post request
-            pass
+            return HttpResponse(request.POST["selected_date"])
     elif not request.user.is_authenticated:  # if user is not authenticated
         return redirect("sign_in")

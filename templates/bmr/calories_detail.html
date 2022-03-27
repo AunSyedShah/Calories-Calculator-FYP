@@ -3,6 +3,11 @@
 {% block title %}
     Calories Detail |
 {% endblock %}
+{% block js_scripts %}
+    <script>
+
+    </script>
+{% endblock %}
 {% block content %}
     <h3>Calories Detail</h3>
     {% for message in messages %}
@@ -14,6 +19,15 @@
         </div>
     {% endfor %}
     <h3>Today's Brief</h3>
+    <!-- Date Picker -->
+    <form method="post" action="">
+        <div class="form-group">
+            <label for="selected_date">Enter Date to Search</label>
+            <input type="date" class="form-control" id="selected_date" name="selected_date">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <!-- items iteration -->
     {% if items %}
         <table class="table table-striped">
             <thead>
