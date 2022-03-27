@@ -182,7 +182,6 @@ def calories_detail(request):
             items = FoodItem.objects.filter(user=request.user.id)
             today_calories = items.filter(date_added=timezone.now())
             some_day_last_week = timezone.now().date() - timedelta(days=7)
-            print(some_day_last_week)
             monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
             monday_of_this_week = monday_of_last_week + timedelta(days=7)
             calories_week = items.filter(date_added__gte=monday_of_last_week, date_added__lt=monday_of_this_week)
