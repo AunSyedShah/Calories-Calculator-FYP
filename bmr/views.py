@@ -180,21 +180,17 @@ def calories_detail(request):
     if request.user.is_authenticated:  # if user is authenticated
         if request.method == "GET":  # get request
             items = FoodItem.objects.filter(user=request.user.id)
-            today_calories = items.filter(date_added=timezone.now())
             some_day_last_week = timezone.now().date() - timedelta(days=7)
             monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
             monday_of_this_week = monday_of_last_week + timedelta(days=7)
             print(monday_of_this_week)
             calories_week = items.filter(date_added__gte=monday_of_last_week, date_added__lt=monday_of_this_week)
-            context = {
-                "items": today_calories,
-                "calories_week": calories_week
-            }
-            return render(request, "bmr/calories_detail.html", context)
+            return render(request, "bmr/calories_detail.html")
         if request.method == "POST":  # post request
-            today_calories = FoodItem.objects.filter(user=request.user.id, date_added=request.POST.get("selected_date"))
+            items_by_user = FoodItem.objects.filter(user=request.user.id)
+            calories_range = items_by_user.filter(date_added=request.POST.get("selected_date"))
             context = {
-                "items": today_calories,
+                "items": calories_range,
             }
             return render(request, "bmr/calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated

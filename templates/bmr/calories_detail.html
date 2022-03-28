@@ -9,7 +9,6 @@
     </script>
 {% endblock %}
 {% block content %}
-    <h3>Calories Detail</h3>
     {% for message in messages %}
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             {{ message }}
@@ -18,10 +17,10 @@
             </button>
         </div>
     {% endfor %}
-    <h3>Today's Brief</h3>
+    <h3>Past Record</h3>
     <!-- Date Picker -->
     <form method="post" action="">
-        <div class="form-group">
+        <div class="form-group w-25">
             <label for="selected_date">Enter Date to Search</label>
             <input type="date" class="form-control" id="selected_date" name="selected_date">
         </div>
@@ -50,38 +49,9 @@
             </tbody>
         </table>
     {% else %}
-        <div class="alert alert-warning" role="alert">
-            No past calories record found, Kindly add calories by <a href="/addfooditem/" class="alert-link">Clicking
-            here</a>.
-        </div>
-    {% endif %}
-
-    <h3>Past Week Calories Record</h3>
-    {% if items %}
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">Item Name</th>
-                <th scope="col">Calories</th>
-                <th scope="col">Meal Type</th>
-                <th scope="col">Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in calories_week %}
-                <tr>
-                    <td>{{ item.item_name }}</td>
-                    <td>{{ item.calories }}</td>
-                    <td>{{ item.meal_type }}</td>
-                    <td>{{ item.date_added }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="alert alert-warning" role="alert">
-            No past calories record found, Kindly add calories by <a href="/addfooditem/" class="alert-link">Clicking
-            here</a>.
+        <div class="alert alert-warning my-1" role="alert">
+            No past calories record found, Kindly add calories by <a href="{% url 'addfooditem' %}" class="alert-link">Clicking
+            here</a>
         </div>
     {% endif %}
 {% endblock %}
