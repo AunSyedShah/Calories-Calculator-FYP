@@ -5,7 +5,21 @@
 {% endblock %}
 {% block js_scripts %}
     <script>
-
+    // future date restrict feature from stack overflow
+        $(function () {
+            let dtToday = new Date();
+            let month = dtToday.getMonth() + 1;
+            let day = dtToday.getDate();
+            let year = dtToday.getFullYear();
+            if (month < 10) {
+                month = '0' + month.toString();
+            }
+            if (day < 10) {
+                day = '0' + day.toString();
+            }
+            let maxDate = year + '-' + month + '-' + day;
+            $('#selected_date').attr('max', maxDate);
+        });
     </script>
 {% endblock %}
 {% block content %}
@@ -48,9 +62,10 @@
             {% endfor %}
             </tbody>
         </table>
-    {% else %}
+    {% elif not items and request.method == "POST" %}
         <div class="alert alert-warning my-1" role="alert">
-            No past calories record found, Kindly add calories by <a href="{% url 'addfooditem' %}" class="alert-link">Clicking
+            No record found for the selected date, Kindly add calories by <a href="{% url 'addfooditem' %}"
+                                                                             class="alert-link">Clicking
             here</a>
         </div>
     {% endif %}
