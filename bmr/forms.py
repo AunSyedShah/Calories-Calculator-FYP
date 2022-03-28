@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
+from django import forms
 
 from .models import BMRDetail, FoodItem
 
@@ -17,7 +18,14 @@ class UserRegistrationForm(UserCreationForm):
         fields = ("first_name", "last_name", "username", "email", "password1", "password2")
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class FoodItemForm(ModelForm):
     class Meta:
         model = FoodItem
-        fields = ("item_name", "calories", "meal_type")
+        widgets = {
+            'date_added': DateInput()
+        }
+        fields = ("item_name", "calories", "meal_type", "date_added")
