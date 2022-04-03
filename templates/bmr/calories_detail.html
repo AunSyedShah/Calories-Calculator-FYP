@@ -5,7 +5,7 @@
 {% endblock %}
 {% block js_scripts %}
     <script>
-    // future date restrict feature from stack overflow
+        // future date restrict feature from stack overflow
         $(function () {
             let dtToday = new Date();
             let month = dtToday.getMonth() + 1;
@@ -38,7 +38,14 @@
             <label for="selected_date">Enter Date to Search</label>
             <input type="date" class="form-control" id="selected_date" name="selected_date">
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary" name="selected_date_btn">Search</button>
+    </form>
+    <form action="" method="post">
+        <div class="form-group w-25">
+            <label for="selected_month">Enter Month to Search</label>
+            <input type="month" class="form-control" id="selected_month" name="selected_month">
+        </div>
+        <button type="submit" class="btn btn-primary" name="selected_month_btn">Search</button>
     </form>
     <!-- items iteration -->
     {% if items %}

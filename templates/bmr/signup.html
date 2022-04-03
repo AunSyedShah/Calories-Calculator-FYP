@@ -3,6 +3,11 @@
 {% block title %}
     Register |
 {% endblock %}
+{% block js_scripts %}
+<script>
+
+</script>
+{% endblock %}
 {% block content %}
     <h3>Registration</h3>
     {% for message in messages %}
@@ -13,7 +18,7 @@
             </button>
         </div>
     {% endfor %}
-    <form method="POST" class="form-group" action="">
+    <form method="POST" class="form-group" action="" id="sign-up-form" name="sign-up-form">
             {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-success">Register</button>
