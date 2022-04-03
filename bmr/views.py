@@ -184,7 +184,6 @@ def calories_detail(request):
             some_day_last_week = timezone.now().date() - timedelta(days=7)
             monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
             monday_of_this_week = monday_of_last_week + timedelta(days=7)
-            print(monday_of_this_week)
             calories_week = items.filter(date_added__gte=monday_of_last_week, date_added__lt=monday_of_this_week)
             return render(request, "bmr/calories_detail.html")
         if request.method == "POST":  # post request
@@ -196,14 +195,17 @@ def calories_detail(request):
                 }
                 return render(request, "bmr/calories_detail.html", context)
             if "selected_month_btn" in request.POST:
-                print(request.POST.get("selected_month"))
                 selected_month_with_year = request.POST.get("selected_month")
                 year_from_string = selected_month_with_year[:4]
                 month_from_string = selected_month_with_year[5:7]
-                print(month_from_string)
-                print(year_from_string)
                 data = FoodItem.objects.filter(date_added__year=year_from_string,
                                                date_added__month=month_from_string)
+                context["items"] = data
+                return render(request, "bmr/calories_detail.html", context)
+            if "selected_week_btn" in request.POST:
+                selected_week = request.POST.get("selected_week")
+                selected_week_number = selected_week[6:]
+                data = FoodItem.objects.filter(date_added__week=selected_week_number)
                 context["items"] = data
                 return render(request, "bmr/calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated
