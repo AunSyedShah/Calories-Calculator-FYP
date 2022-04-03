@@ -205,7 +205,8 @@ def calories_detail(request):
             if "selected_week_btn" in request.POST:
                 selected_week = request.POST.get("selected_week")
                 selected_week_number = selected_week[6:]
-                data = FoodItem.objects.filter(date_added__week=selected_week_number)
+                selected_year = selected_week[:4]
+                data = FoodItem.objects.filter(date_added__week=selected_week_number, date_added__year=selected_year)
                 context["items"] = data
                 return render(request, "bmr/calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated
