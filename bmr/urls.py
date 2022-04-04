@@ -11,4 +11,5 @@ urlpatterns = [
     path('addfooditem/', views.add_food_item, name="addfooditem"),
     path('delete_bmr/<delete_id>', views.delete_bmr),
     path('calories_detail/', views.calories_detail, name="calories_detail"),
+    path('calories_graph/', views.calories_graph, name="calories_graph"),
 ]

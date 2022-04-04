@@ -211,3 +211,8 @@ def calories_detail(request):
                 return render(request, "bmr/calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated
         return redirect("sign_in")
+
+
+def calories_graph(request):
+    if request.method == "GET":
+        return render(request, "bmr/calories_graph.html")
