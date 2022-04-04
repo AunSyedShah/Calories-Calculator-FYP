@@ -214,5 +214,8 @@ def calories_detail(request):
 
 
 def calories_graph(request):
-    if request.method == "GET":
-        return render(request, "bmr/calories_graph.html")
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            return render(request, "bmr/calories_graph.html")
+    else:
+        return redirect("sign_in")
