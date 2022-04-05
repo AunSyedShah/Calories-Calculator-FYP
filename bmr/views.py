@@ -215,7 +215,13 @@ def calories_detail(request):
 
 def calories_graph(request):
     if request.user.is_authenticated:
+        context = {}
         if request.method == "GET":
-            return render(request, "bmr/calories_graph.html")
+            calories_count_january = 0
+            food_items_january = FoodItem.objects.filter(date_added__month=4)
+            for item in food_items_january:
+                calories_count_january += calories_count_january + item.calories
+            context["january_calories"] = calories_count_january
+            return render(request, "bmr/calories_graph.html", context)
     else:
         return redirect("sign_in")
