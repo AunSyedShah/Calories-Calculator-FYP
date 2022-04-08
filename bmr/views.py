@@ -121,6 +121,7 @@ def sign_in(request):
         if form.is_valid():
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
+
             user = authenticate(username=username, password=password)
             if user:  # if user is authenticated
                 login(request, user)  # login and create session
@@ -180,11 +181,6 @@ def calories_detail(request):
     if request.user.is_authenticated:  # if user is authenticated
         context = {}
         if request.method == "GET":  # get request
-            items = FoodItem.objects.filter(user=request.user.id)
-            some_day_last_week = timezone.now().date() - timedelta(days=7)
-            monday_of_last_week = some_day_last_week - timedelta(days=(some_day_last_week.isocalendar()[2] - 1))
-            monday_of_this_week = monday_of_last_week + timedelta(days=7)
-            calories_week = items.filter(date_added__gte=monday_of_last_week, date_added__lt=monday_of_this_week)
             return render(request, "bmr/calories_detail.html")
         if request.method == "POST":  # post request
             if "selected_date_btn" in request.POST:
@@ -199,14 +195,15 @@ def calories_detail(request):
                 year_from_string = selected_month_with_year[:4]
                 month_from_string = selected_month_with_year[5:7]
                 data = FoodItem.objects.filter(date_added__year=year_from_string,
-                                               date_added__month=month_from_string)
+                                               date_added__month=month_from_string, user=request.user.id)
                 context["items"] = data
                 return render(request, "bmr/calories_detail.html", context)
             if "selected_week_btn" in request.POST:
                 selected_week = request.POST.get("selected_week")
                 selected_week_number = selected_week[6:]
                 selected_year = selected_week[:4]
-                data = FoodItem.objects.filter(date_added__week=selected_week_number, date_added__year=selected_year)
+                data = FoodItem.objects.filter(user=request.user.id, date_added__week=selected_week_number,
+                                               date_added__year=selected_year)
                 context["items"] = data
                 return render(request, "bmr/calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated
@@ -217,11 +214,32 @@ def calories_graph(request):
     if request.user.is_authenticated:
         context = {}
         if request.method == "GET":
-            calories_count_january = 0
-            food_items_january = FoodItem.objects.filter(date_added__month=4)
-            for item in food_items_january:
-                calories_count_january += calories_count_january + item.calories
-            context["january_calories"] = calories_count_january
+            return render(request, "bmr/calories_graph.html")
+        if request.method == "POST":
+            selected_month_with_year = request.POST.get("selected_month")
+            year_from_string = selected_month_with_year[:4]
+            month_from_string = selected_month_with_year[5:7]
+            food_items = FoodItem.objects.filter(date_added__year=year_from_string,
+                                                 date_added__month=month_from_string, user=request.user.id)
+            months_dict = {
+                "01": "January",
+                "02": "February",
+                "03": "March",
+                "04": "April",
+                "05": "May",
+                "06": "June",
+                "07": "July",
+                "08": "August",
+                "09": "September",
+                "10": "October",
+                "11": "November",
+                "12": "December",
+            }
+            context["month_name"] = months_dict[month_from_string]
+            total_calories_consumed = 0
+            for item in food_items:
+                total_calories_consumed += item.calories
+            context["calories"] = total_calories_consumed
             return render(request, "bmr/calories_graph.html", context)
     else:
         return redirect("sign_in")

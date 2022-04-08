@@ -18,7 +18,13 @@
     {% endfor %}
 
     <h1>Graph</h1>
-
+    <form action="" method="post">
+        <div class="form-group w-25">
+            <label for="selected_month">Enter Month to Search</label>
+            <input type="month" class="form-control" id="selected_month" name="selected_month">
+        </div>
+        <button type="submit" class="btn btn-primary" name="selected_month_btn">Display Graphical Report</button>
+    </form>
     {% if request.method == "POST" %}
         <div class="w-50">
             <canvas id="myChart" width="400" height="400"></canvas>
@@ -26,16 +32,8 @@
     {% endif %}
 
     <script>
-        const january_calories =
-        {{ january_calories }}
         const labels = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
+            `{{ month_name }}`,
         ];
 
         const data = {
@@ -44,7 +42,7 @@
                 label: 'Calories Report',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [january_calories, 10, 5, 2, 20, 30, 45],
+                data: [{{ calories }}],
             }]
         };
 
