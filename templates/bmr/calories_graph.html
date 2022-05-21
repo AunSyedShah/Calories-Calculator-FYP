@@ -17,23 +17,26 @@
         </div>
     {% endfor %}
 
-    <h1>Graph</h1>
+    <h1>Graphical Report</h1>
     <form action="" method="post">
         <div class="form-group w-25">
-            <label for="selected_month">Enter Month to Search</label>
+            <label for="selected_month">Select Month to View Graph</label>
             <input type="month" class="form-control" id="selected_month" name="selected_month">
         </div>
         <button type="submit" class="btn btn-primary" name="selected_month_btn">Display Graphical Report</button>
     </form>
     {% if request.method == "POST" %}
-        <div class="w-50">
-            <canvas id="myChart" width="400" height="400"></canvas>
+        <div class="w-75">
+            <canvas id="myChart"></canvas>
         </div>
     {% endif %}
 
     <script>
         const labels = [
-            `{{ month_name }}`,
+            {% for food_item in food_items %}
+                '{{ food_item.date_added }}',
+            {% endfor %}
+
         ];
 
         const data = {
@@ -42,7 +45,12 @@
                 label: 'Calories Report',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [{{ calories }}],
+                data: [
+                    {% for food_item in food_items %}
+                        '{{ food_item.calories }}',
+                    {% endfor %}
+
+                ],
             }]
         };
 

@@ -221,25 +221,7 @@ def calories_graph(request):
             month_from_string = selected_month_with_year[5:7]
             food_items = FoodItem.objects.filter(date_added__year=year_from_string,
                                                  date_added__month=month_from_string, user=request.user.id)
-            months_dict = {
-                "01": "January",
-                "02": "February",
-                "03": "March",
-                "04": "April",
-                "05": "May",
-                "06": "June",
-                "07": "July",
-                "08": "August",
-                "09": "September",
-                "10": "October",
-                "11": "November",
-                "12": "December",
-            }
-            context["month_name"] = months_dict[month_from_string]
-            total_calories_consumed = 0
-            for item in food_items:
-                total_calories_consumed += item.calories
-            context["calories"] = total_calories_consumed
+            context["food_items"] = food_items
             return render(request, "bmr/calories_graph.html", context)
     else:
         return redirect("sign_in")
