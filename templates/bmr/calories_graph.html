@@ -16,8 +16,8 @@
             </button>
         </div>
     {% endfor %}
-
     <h1>Graphical Report</h1>
+    <p>Calculated BMR {{ user_bmr }}</p>
     <form action="" method="post">
         <div class="form-group w-25">
             <label for="selected_month">Select Month to View Graph</label>
@@ -26,19 +26,26 @@
         <button type="submit" class="btn btn-primary" name="selected_month_btn">Display Graphical Report</button>
     </form>
     {% if request.method == "POST" %}
-        <div class="w-75">
-            <canvas id="myChart"></canvas>
-        </div>
+        {% if calories %}
+            <div class="w-75">
+                <canvas id="myChart"></canvas>
+            </div>
+        {% else %}
+            <div class="alert alert-warning alert-dismissible fade show my-2 w-50" role="alert">
+                Since no record exists for this month, graph can not be generated
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
     {% endif %}
 
     <script>
         const labels = [
-            {% for food_item in food_items %}
-                '{{ food_item.date_added }}',
+            {% for item in items %}
+                '{{ item }}',
             {% endfor %}
-
         ];
-
         const data = {
             labels: labels,
             datasets: [{
@@ -46,10 +53,9 @@
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: [
-                    {% for food_item in food_items %}
-                        '{{ food_item.calories }}',
+                    {% for calorie in calories %}
+                        '{{ calorie }}',
                     {% endfor %}
-
                 ],
             }]
         };
@@ -57,7 +63,16 @@
         const config = {
             type: 'bar',
             data: data,
-            options: {}
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'green'
+                        },
+                    }
+                },
+            },
         };
     </script>
     <script>

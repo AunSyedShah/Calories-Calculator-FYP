@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.utils import timezone
+import itertools
 
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
 from .models import BMRDetail
@@ -213,15 +214,30 @@ def calories_detail(request):
 def calories_graph(request):
     if request.user.is_authenticated:
         context = {}
+        user_bmr = BMRDetail.objects.get(user=request.user.id).bmr
+        context["user_bmr"] = user_bmr
         if request.method == "GET":
-            return render(request, "bmr/calories_graph.html")
+            return render(request, "bmr/calories_graph.html", context)
         if request.method == "POST":
             selected_month_with_year = request.POST.get("selected_month")
             year_from_string = selected_month_with_year[:4]
             month_from_string = selected_month_with_year[5:7]
-            food_items = FoodItem.objects.filter(date_added__year=year_from_string,
-                                                 date_added__month=month_from_string, user=request.user.id)
-            context["food_items"] = food_items
+            food_items_qs = FoodItem.objects.filter(date_added__year=year_from_string,
+                                                    date_added__month=month_from_string, user=request.user.id).order_by(
+                'date_added')
+            date_dictionary = {
+
+            }
+            for food_item in food_items_qs:
+                if food_item.date_added in date_dictionary:
+                    date_dictionary[food_item.date_added] += food_item.calories
+                else:
+                    date_dictionary[food_item.date_added] = food_item.calories
+            context["items"] = date_dictionary
+            calories_list_for_certain_day = []
+            for item in date_dictionary.values():
+                calories_list_for_certain_day.append(item)
+            context["calories"] = calories_list_for_certain_day
             return render(request, "bmr/calories_graph.html", context)
     else:
         return redirect("sign_in")
