@@ -1,12 +1,9 @@
-from datetime import timedelta
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-import itertools
 
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
 from .models import BMRDetail
