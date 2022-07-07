@@ -210,6 +210,8 @@ def calories_detail(request):
 
 def calories_graph(request):
     if request.user.is_authenticated:
+        if not BMRDetail.objects.filter(user=request.user.id):
+            return redirect("home")
         context = {}
         user_bmr = BMRDetail.objects.get(user=request.user.id).bmr
         context["user_bmr"] = user_bmr
@@ -241,4 +243,15 @@ def calories_graph(request):
 
 
 def edit_profile(request):
-    return render(request, "edit_ptofile.html")
+    if not request.user.is_authenticated:
+        return redirect("sign_in")
+    if not BMRDetail.objects.filter(user=request.user.id):
+        return redirect("home")
+    context = {}
+    if request.method == "GET":
+        user_profile_picture = BMRDetail.objects.get(user=request.user.id).user_profile_pic
+        print(user_profile_picture)
+        context["user_profile_picture"] = user_profile_picture
+        return render(request, "edit_profile.html", context)
+    if request.method == "POST":
+        return render(request, "edit_profile.html", context)

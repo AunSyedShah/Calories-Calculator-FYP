@@ -42,12 +42,12 @@
                                     Welcome, {{ request.user.first_name }}
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#">Edit BMR Details</a></li>
                                     <li><a class="dropdown-item" href="{% url 'addfooditem' %}">Add Food Items</a></li>
                                     <li><a class="dropdown-item" href="{% url 'calories_graph' %}">Calories Graph</a>
                                     </li>
                                     <li><a class="dropdown-item" href="{% url 'calories_detail' %}">Calories Detail</a>
                                     </li>
+                                    <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
