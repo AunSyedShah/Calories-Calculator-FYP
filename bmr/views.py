@@ -238,3 +238,7 @@ def calories_graph(request):
             return render(request, "bmr/calories_graph.html", context)
     else:
         return redirect("sign_in")
+
+
+def edit_profile(request):
+    return render(request, "bmr/edit_profile.html")
