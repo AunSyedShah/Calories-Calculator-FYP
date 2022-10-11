@@ -144,6 +144,9 @@ def sign_in(request):
 
 
 def user_logout(request):
+    # if user is already logged out, redirect to login page
+    if not request.user.is_authenticated:
+        return redirect("sign_in")
     logout(request)
     messages.success(request, "Successfully Logged Out")
     return redirect("sign_in")
@@ -194,6 +197,8 @@ def calories_detail(request):
                 month_from_string = selected_month_with_year[5:7]
                 data = FoodItem.objects.filter(date_added__year=year_from_string,
                                                date_added__month=month_from_string, user=request.user.id)
+                print(FoodItem.objects.filter(date_added__year=year_from_string,
+                                              date_added__month=month_from_string, user=request.user.id).query)
                 context["items"] = data
                 return render(request, "calories_detail.html", context)
             if "selected_week_btn" in request.POST:
