@@ -67,6 +67,7 @@ def dashboard(request):
     if request.user.is_authenticated:
         bmr = BMRDetail.objects.get(user=request.user.id).bmr
         food_items = FoodItem.objects.filter(user=request.user.id, date_added=timezone.now())
+        print(FoodItem.objects.filter(user=request.user.id, date_added=timezone.now()).query)
         total_calories = 0
 
         for food_item in food_items:
@@ -207,6 +208,9 @@ def calories_detail(request):
                 selected_year = selected_week[:4]
                 data = FoodItem.objects.filter(user=request.user.id, date_added__week=selected_week_number,
                                                date_added__year=selected_year)
+                # print SQL query
+                print(FoodItem.objects.filter(user=request.user.id, date_added__week=selected_week_number,
+                                              date_added__year=selected_year).query)
                 context["items"] = data
                 return render(request, "calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated
