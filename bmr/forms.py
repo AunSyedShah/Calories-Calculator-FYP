@@ -9,6 +9,10 @@ from .models import BMRDetail, FoodItem
 class BMRForm(ModelForm):
     class Meta:
         model = BMRDetail
+        # change gender to radio field
+        widgets = {
+            "gender": forms.RadioSelect()
+        }
         fields = ('gender', 'weight', 'height', 'age', 'life_style',)
 
 

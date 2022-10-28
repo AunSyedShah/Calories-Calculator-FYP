@@ -4,10 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.http import JsonResponse
 
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
-from .models import BMRDetail
-from .models import FoodItem
+from .models import BMRDetail, FoodItem
 
 
 def calculate_bmr_gender_based(gender, weight, height, age):
@@ -264,3 +264,18 @@ def edit_profile(request):
         return render(request, "edit_profile.html", context)
     if request.method == "POST":
         return render(request, "edit_profile.html", context)
+
+
+def delete_food_item(request, delete_id):
+    record_to_delete = get_object_or_404(FoodItem, id=delete_id)
+    record_to_delete.delete()
+    return redirect("calories_detail")
+
+
+def custom_bmr_view(request):
+    return render(request, "custom_bmr_view.html")
+
+
+def bmr_handler(request):
+    if request.method == "POST":
+        return JsonResponse(data=request.POST, safe=False)

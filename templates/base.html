@@ -33,27 +33,29 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                Welcome, {{ request.user.first_name }}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% url 'addfooditem' %}">Add Food Items</a></li>
-                                <li><a class="dropdown-item" href="{% url 'calories_graph' %}">Calories Graph</a>
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'calories_detail' %}">Calories Detail</a>
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                <div class="d-flex flex-row-reverse">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Welcome, {{ request.user.first_name }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'addfooditem' %}">Add Food Items</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'calories_graph' %}">Calories Graph</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{% url 'calories_detail' %}">Calories Detail</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             {% endif %}
         </div>

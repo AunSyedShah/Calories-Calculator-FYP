@@ -63,6 +63,8 @@
                 <th scope="col">Calories</th>
                 <th scope="col">Meal Type</th>
                 <th scope="col">Date</th>
+                <!-- delete button -->
+                <th scope="col">Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -72,6 +74,8 @@
                     <td>{{ item.calories }}</td>
                     <td>{{ item.meal_type }}</td>
                     <td>{{ item.date_added }}</td>
+                    <td><a role="button" class="btn btn-danger" href="{% url 'delete_food_item' item.id %}">Delete</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
