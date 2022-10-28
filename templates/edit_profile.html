@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+    Login |
+{% endblock %}
+{% block content %}
+
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    <h1>Edit Profile</h1>
+    <!-- <form>
+        <div class="mb-3">
+            <label for="user_img" class="form-label">Select Image</label>
+            <input type="image" class="form-control" id="user_img">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form> -->
+    {% if user_profile_picture %}
+        <img src="{{ user_profile_picture.url }}" class="img-thumbnail" alt="...">
+    {% else %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Warning!</strong> You have not uploaded a profile picture.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <form>
+            <input type="file" accept="image/jpeg, image/png">
+        </form>
+    {% endif %}
+{% endblock %}

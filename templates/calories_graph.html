@@ -1,4 +1,4 @@
-{% extends "bmr/base.html" %}
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block title %}
     Calories Graph |
@@ -17,7 +17,6 @@
         </div>
     {% endfor %}
     <h1>Graphical Report</h1>
-    <p>Calculated BMR {{ user_bmr }}</p>
     <form action="" method="post">
         <div class="form-group w-25">
             <label for="selected_month">Select Month to View Graph</label>
@@ -33,9 +32,7 @@
         {% else %}
             <div class="alert alert-warning alert-dismissible fade show my-2 w-50" role="alert">
                 Since no record exists for this month, graph can not be generated
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
     {% endif %}
@@ -60,6 +57,16 @@
             }]
         };
 
+        const horizontalDottedLine = {
+            id: 'horizontalDottedLine',
+            beforeDatasetsDraw(chart, args, options) {
+                const {ctx, chartArea: {top, right, bottom, left, width, height}, scales: {x, y}} = chart;
+                ctx.save();
+                ctx.strokeStyle = 'blue';
+                ctx.strokeRect(left, y.getPixelForValue({{user_bmr}}), width, 0);
+                ctx.restore();
+            }
+        }
         const config = {
             type: 'bar',
             data: data,
@@ -73,6 +80,7 @@
                     }
                 },
             },
+            plugins: [horizontalDottedLine]
         };
     </script>
     <script>

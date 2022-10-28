@@ -4,10 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.http import JsonResponse
 
 from .forms import BMRForm, UserRegistrationForm, FoodItemForm
-from .models import BMRDetail
-from .models import FoodItem
+from .models import BMRDetail, FoodItem
 
 
 def calculate_bmr_gender_based(gender, weight, height, age):
@@ -58,7 +58,7 @@ def home(request):
                 context["form"] = form
                 context["user"] = user
                 context["bmr_details"] = bmr_details
-                return render(request, "bmr/bmr_input.html", context)
+                return render(request, "bmr_input.html", context)
     else:
         return redirect("sign_in")
 
@@ -67,6 +67,7 @@ def dashboard(request):
     if request.user.is_authenticated:
         bmr = BMRDetail.objects.get(user=request.user.id).bmr
         food_items = FoodItem.objects.filter(user=request.user.id, date_added=timezone.now())
+        print(FoodItem.objects.filter(user=request.user.id, date_added=timezone.now()).query)
         total_calories = 0
 
         for food_item in food_items:
@@ -80,7 +81,7 @@ def dashboard(request):
             "calories_status": calories_status,
             "today_date": timezone.now().date()
         }
-        return render(request, "bmr/dashboard.html", context)
+        return render(request, "dashboard.html", context)
     else:
         return redirect("sign_in")
 
@@ -107,7 +108,7 @@ def signup(request):
     else:
         form = UserRegistrationForm()
         context["form"] = form
-    return render(request, "bmr/signup.html", context)
+    return render(request, "signup.html", context)
 
 
 def sign_in(request):
@@ -140,10 +141,13 @@ def sign_in(request):
             return redirect("home")
         form = AuthenticationForm()
         context["form"] = form
-    return render(request, "bmr/login.html", context)
+    return render(request, "login.html", context)
 
 
 def user_logout(request):
+    # if user is already logged out, redirect to login page
+    if not request.user.is_authenticated:
+        return redirect("sign_in")
     logout(request)
     messages.success(request, "Successfully Logged Out")
     return redirect("sign_in")
@@ -153,7 +157,7 @@ def add_food_item(request):
     if request.user.is_authenticated:
         if request.method == "GET":
             form = FoodItemForm()
-            return render(request, "bmr/addItemsCalories.html", {"form": form})
+            return render(request, "addItemsCalories.html", {"form": form})
         elif request.method == "POST":
             form = FoodItemForm(request.POST)
             if form.is_valid():
@@ -179,7 +183,7 @@ def calories_detail(request):
     if request.user.is_authenticated:  # if user is authenticated
         context = {}
         if request.method == "GET":  # get request
-            return render(request, "bmr/calories_detail.html")
+            return render(request, "calories_detail.html")
         if request.method == "POST":  # post request
             if "selected_date_btn" in request.POST:
                 items_by_user = FoodItem.objects.filter(user=request.user.id)
@@ -187,34 +191,41 @@ def calories_detail(request):
                 context = {
                     "items": calories_range,
                 }
-                return render(request, "bmr/calories_detail.html", context)
+                return render(request, "calories_detail.html", context)
             if "selected_month_btn" in request.POST:
                 selected_month_with_year = request.POST.get("selected_month")
                 year_from_string = selected_month_with_year[:4]
                 month_from_string = selected_month_with_year[5:7]
                 data = FoodItem.objects.filter(date_added__year=year_from_string,
                                                date_added__month=month_from_string, user=request.user.id)
+                print(FoodItem.objects.filter(date_added__year=year_from_string,
+                                              date_added__month=month_from_string, user=request.user.id).query)
                 context["items"] = data
-                return render(request, "bmr/calories_detail.html", context)
+                return render(request, "calories_detail.html", context)
             if "selected_week_btn" in request.POST:
                 selected_week = request.POST.get("selected_week")
                 selected_week_number = selected_week[6:]
                 selected_year = selected_week[:4]
                 data = FoodItem.objects.filter(user=request.user.id, date_added__week=selected_week_number,
                                                date_added__year=selected_year)
+                # print SQL query
+                print(FoodItem.objects.filter(user=request.user.id, date_added__week=selected_week_number,
+                                              date_added__year=selected_year).query)
                 context["items"] = data
-                return render(request, "bmr/calories_detail.html", context)
+                return render(request, "calories_detail.html", context)
     elif not request.user.is_authenticated:  # if user is not authenticated
         return redirect("sign_in")
 
 
 def calories_graph(request):
     if request.user.is_authenticated:
+        if not BMRDetail.objects.filter(user=request.user.id):
+            return redirect("home")
         context = {}
         user_bmr = BMRDetail.objects.get(user=request.user.id).bmr
         context["user_bmr"] = user_bmr
         if request.method == "GET":
-            return render(request, "bmr/calories_graph.html", context)
+            return render(request, "calories_graph.html", context)
         if request.method == "POST":
             selected_month_with_year = request.POST.get("selected_month")
             year_from_string = selected_month_with_year[:4]
@@ -235,6 +246,36 @@ def calories_graph(request):
             for item in date_dictionary.values():
                 calories_list_for_certain_day.append(item)
             context["calories"] = calories_list_for_certain_day
-            return render(request, "bmr/calories_graph.html", context)
+            return render(request, "calories_graph.html", context)
     else:
         return redirect("sign_in")
+
+
+def edit_profile(request):
+    if not request.user.is_authenticated:
+        return redirect("sign_in")
+    if not BMRDetail.objects.filter(user=request.user.id):
+        return redirect("home")
+    context = {}
+    if request.method == "GET":
+        user_profile_picture = BMRDetail.objects.get(user=request.user.id).user_profile_pic
+        print(user_profile_picture)
+        context["user_profile_picture"] = user_profile_picture
+        return render(request, "edit_profile.html", context)
+    if request.method == "POST":
+        return render(request, "edit_profile.html", context)
+
+
+def delete_food_item(request, delete_id):
+    record_to_delete = get_object_or_404(FoodItem, id=delete_id)
+    record_to_delete.delete()
+    return redirect("calories_detail")
+
+
+def custom_bmr_view(request):
+    return render(request, "custom_bmr_view.html")
+
+
+def bmr_handler(request):
+    if request.method == "POST":
+        return JsonResponse(data=request.POST, safe=False)
