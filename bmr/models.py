@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
 
 # Create your models here.
@@ -23,6 +22,7 @@ class BMRDetail(models.Model):
     )
     life_style = models.IntegerField(choices=LIFE_STYLE_CHOICES, default=0)
     bmr = models.IntegerField(default=0)
+    user_profile_pic = models.ImageField(upload_to='profile_pics', blank=True)
 
 
 class FoodItem(models.Model):

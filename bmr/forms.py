@@ -9,6 +9,10 @@ from .models import BMRDetail, FoodItem
 class BMRForm(ModelForm):
     class Meta:
         model = BMRDetail
+        # change gender to radio field
+        widgets = {
+            "gender": forms.RadioSelect()
+        }
         fields = ('gender', 'weight', 'height', 'age', 'life_style',)
 
 
@@ -16,6 +20,12 @@ class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("first_name", "last_name", "username", "email", "password1", "password2")
+        # add placeholders to the form fields
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+        }
 
 
 class DateInput(forms.DateInput):
